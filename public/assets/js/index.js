@@ -14,6 +14,7 @@ if (window.location.pathname === '/notes') {
   clearBtn = document.querySelector('.clear-btn');
   noteList = document.querySelectorAll('.list-container .list-group');
 }
+console.log(window.location.pathname);
 
 // Show an element
 const show = (elem) => {
@@ -28,17 +29,12 @@ const hide = (elem) => {
 // activeNote is used to keep track of the note in the textarea
 let activeNote = {};
 
-const getNotes = () => {
-  fetch('/api/notes', {
+const getNotes = () => fetch('/api/notes', {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json'
     }
-  })
-  //Added to parse data
-  .then(res => res.json())
-  .then((data) => data);
-}
+  });
 
 const saveNote = (note) =>
   fetch('/api/notes', {
@@ -186,7 +182,10 @@ const renderNoteList = async (notes) => {
 };
 
 // Gets notes from the db and renders them to the sidebar
-const getAndRenderNotes = () => getNotes().then(renderNoteList);
+const getAndRenderNotes = () => {
+  const fetchPromise = getNotes();
+  fetchPromise.then(renderNoteList);
+}
 
 if (window.location.pathname === '/notes') {
   saveNoteBtn.addEventListener('click', handleNoteSave);
@@ -196,3 +195,4 @@ if (window.location.pathname === '/notes') {
 }
 
 getAndRenderNotes();
+
